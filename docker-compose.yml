@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  homelab-butler:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      # 挂载外部配置文件到容器内的工作目录
+      - ./config.yml:/app/config.yml:ro
+      # 可选：挂载整个配置目录
+      # - ./config:/app/config:ro
+    environment:
+      - TZ=Asia/Shanghai
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # 可选：如果需要本地 MySQL 数据库
+  # mysql:
+  #   image: mysql:8.0
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: rootpassword
+  #     MYSQL_DATABASE: app
+  #     MYSQL_USER: app
+  #     MYSQL_PASSWORD: App123456!
+  #   ports:
+  #     - "3306:3306"
+  #   volumes:
+  #     - mysql_data:/var/lib/mysql
+  #   restart: unless-stopped
+
+# volumes:
+#   mysql_data: 

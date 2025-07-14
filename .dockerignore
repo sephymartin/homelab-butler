@@ -1,0 +1,36 @@
+# Git 相关
+.git
+.gitignore
+.gitattributes
+
+# Docker 相关
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# 文档
+README.md
+*.md
+
+# 编辑器和IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# 操作系统
+.DS_Store
+Thumbs.db
+
+# 临时文件
+*.tmp
+*.log
+
+# 构建产物
+homelab-butler
+*.exe
+
+# 测试文件
+*_test.go
+test/ 

@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Launch Gin App",
+        "type": "go",
+        "request": "launch",
+        "mode": "auto",
+        "program": "${workspaceFolder}/main.go",
+        "args": [],
+        "env": {
+          "GIN_MODE": "debug"  // 可以设置为 release 用于生产环境
+        }
+      }
+    ]
+  }
