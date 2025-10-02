@@ -15,16 +15,16 @@ import (
 // GetHosts 获取所有主机列表
 func GetHosts(c *gin.Context) {
 	var hosts []models.Host
-	
+
 	// 获取查询参数
 	hosts_groups := c.Query("hosts_groups")
-	format := c.Query("format") // 支持 format=text 参数
+	format := c.Query("format")    // 支持 format=text 参数
 	ipFirst := c.Query("ip_first") // 支持 ip_first=1 参数
-	
+
 	// 从数据库查询主机记录
 	db := database.GetDB()
 	query := db
-	
+
 	// 如果指定了组别，则按组别过滤
 	if hosts_groups != "" {
 		// 支持逗号分隔的多个组别
@@ -35,7 +35,7 @@ func GetHosts(c *gin.Context) {
 		}
 		query = query.Where("hosts_group IN ?", groupList)
 	}
-	
+
 	if err := query.Find(&hosts).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error":   "查询主机列表失败",
@@ -44,8 +44,20 @@ func GetHosts(c *gin.Context) {
 		return
 	}
 
-	// 检查是否需要返回 text 格式
+	// 检查是否需要返回特殊格式
 	acceptHeader := c.GetHeader("Accept")
+	if format == "clash" {
+		// 返回 clash 格式: domain:ip
+		var hostsContent string
+		for _, host := range hosts {
+			hostsContent += host.Domain + ":" + host.IPAddr + "\n"
+		}
+
+		c.Header("Content-Type", "text/plain; charset=utf-8")
+		c.String(http.StatusOK, hostsContent)
+		return
+	}
+
 	if format == "text" || acceptHeader == "text/plain" {
 		// 返回 hosts 文件格式
 		var hostsContent string
@@ -58,7 +70,7 @@ func GetHosts(c *gin.Context) {
 				hostsContent += host.IPAddr + "\t\t" + host.Domain + "\n"
 			}
 		}
-		
+
 		c.Header("Content-Type", "text/plain; charset=utf-8")
 		c.String(http.StatusOK, hostsContent)
 		return
@@ -113,7 +125,7 @@ type CreateHostRequest struct {
 // CreateHost 创建新主机记录
 func CreateHost(c *gin.Context) {
 	var req CreateHostRequest
-	
+
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error":   "请求参数无效",
@@ -177,7 +189,7 @@ func UpdateHost(c *gin.Context) {
 
 	var host models.Host
 	db := database.GetDB()
-	
+
 	// 检查主机是否存在
 	if err := db.First(&host, uint(id)).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
@@ -210,7 +222,7 @@ func UpdateHost(c *gin.Context) {
 	if req.Remark != "" {
 		host.Remark = req.Remark
 	}
-	
+
 	// 设置更新信息
 	host.UpdatedBy = getUserID(c)
 	host.UpdatedTime = time.Now()
@@ -244,7 +256,7 @@ func DeleteHost(c *gin.Context) {
 	}
 
 	db := database.GetDB()
-	
+
 	// 硬删除
 	if err := db.Delete(&models.Host{}, uint(id)).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -267,10 +279,10 @@ func getUserID(c *gin.Context) int64 {
 	if !exists {
 		return 0 // 默认用户ID
 	}
-	
+
 	if id, ok := userID.(int64); ok {
 		return id
 	}
-	
+
 	return 0
-} 
+}

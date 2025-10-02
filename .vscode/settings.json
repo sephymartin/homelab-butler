@@ -1,0 +1,13 @@
+{
+    "java.jdt.ls.java.home": "/Users/sephy/.local/share/mise/installs/java/zulu-8.86.0.25",
+    "java.import.gradle.java.home": "/Users/sephy/.local/share/mise/installs/java/zulu-8.86.0.25",
+    "go.goroot": "/Users/sephy/.local/share/mise/installs/go/1.24.4",
+    "debug.javascript.defaultRuntimeExecutable": {
+        "pwa-node": "/Users/sephy/.local/share/mise/shims/node"
+    },
+    "go.alternateTools": {
+        "go": "/Users/sephy/.local/share/mise/shims/go",
+        "dlv": "/Users/sephy/.local/share/mise/shims/dlv",
+        "gopls": "/Users/sephy/.local/share/mise/shims/gopls"
+    }
+}
