@@ -50,7 +50,7 @@ func GetHosts(c *gin.Context) {
 		// 返回 clash 格式: domain:ip
 		var hostsContent string
 		for _, host := range hosts {
-			hostsContent += host.Domain + ":" + host.IPAddr + "\n"
+			hostsContent += host.Domain + ":\t\t" + host.IPAddr + "\n"
 		}
 
 		c.Header("Content-Type", "text/plain; charset=utf-8")

@@ -1,9 +1,9 @@
 database:
-  host: localhost
+  host: 'rm-uf682q4z7gr9zbnj4.mysql.rds.aliyuncs.com'
   port: 3306
-  username: root
-  password: password
-  database: homelab
+  username: app
+  password: 'App123456!'
+  database: app
   charset: utf8mb4
 
 server:
